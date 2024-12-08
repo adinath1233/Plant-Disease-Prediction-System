@@ -95,7 +95,7 @@ The system can predict the following plant diseases:
 
 3. **Install the required dependencies**:
     ```bash
-    pip install -r requirements.txt
+    pip install -r requirments.txt
     ```
 
 4. **Run the Flask application**:
