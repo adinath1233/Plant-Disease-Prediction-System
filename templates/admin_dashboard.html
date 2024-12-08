@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Admin Dashboard</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
+</head>
+<body>
+  <div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h2>Admin Dashboard</h2>
+      <a href="{{ url_for('logout') }}" class="btn btn-danger">Logout</a>
+    </div>
+
+    <div class="row">
+      <div class="col-md-6">
+        <h4>Users by City</h4>
+        <canvas id="cityChart"></canvas>
+      </div>
+      <div class="col-md-6">
+        <h4>Predictions by Type</h4>
+        <canvas id="predictionChart"></canvas>
+      </div>
+    </div>
+
+    <div class="mt-5">
+      <h3>All Users</h3>
+      <table class="table table-striped">
+        <thead class="thead-dark">
+          <tr>
+            <th>Name</th>
+            <th>City</th>
+            <th>Prediction</th>
+            <th>Image</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for user in users %}
+          <tr>
+            <td>{{ user.name }}</td>
+            <td>{{ user.city }}</td>
+            <td>{{ user.prediction }}</td>
+            <td><img src="{{ url_for('static', filename='uploads/' ~ user.filename) }}" alt="Image" width="100"></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var cityData = {{ city_data | safe }};
+      var predictionData = {{ prediction_data | safe }};
+
+      var ctxCity = document.getElementById('cityChart').getContext('2d');
+      var cityChart = new Chart(ctxCity, {
+        type: 'pie',
+        data: {
+          labels: Object.keys(cityData),
+          datasets: [{
+            label: 'Users by City',
+            data: Object.values(cityData),
+            backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF'],
+          }]
+        }
+      });
+
+      var ctxPrediction = document.getElementById('predictionChart').getContext('2d');
+      var predictionChart = new Chart(ctxPrediction, {
+        type: 'pie',
+        data: {
+          labels: Object.keys(predictionData),
+          datasets: [{
+            label: 'Predictions by Type',
+            data: Object.values(predictionData),
+            backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF'],
+          }]
+        }
+      });
+    });
+  </script>
+
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+</body>
+</html>
